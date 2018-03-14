@@ -247,9 +247,9 @@
           9: 9,
           '九': 9,
 
-          '前': 0,
+          '进': 0,
 
-          '后': 1,
+          '退': 1,
 
           '平': 2,
 
@@ -716,12 +716,12 @@
             }
 
             self.posesFilter = poses;
-            // console.log(self.posesFilter)
+           console.log('車',self.posesFilter)
             if (color == 'black') {
               for (let i = 0; i < self.posesFilter.length; i++) {
                 if (self.posesFilter[i].y > pos.y) {
                   message[0] = {message: '进', ifshow: true, notClick: false}
-                } else if (self.posesFilter[i].y = pos.y) {
+                } else if (self.posesFilter[i].y == pos.y) {
                   message[1] = {message: '平', ifshow: true, notClick: false}
                 } else {
                   message[2] = {message: '退', ifshow: true, notClick: false}
@@ -731,7 +731,7 @@
               for (let i = 0; i < self.posesFilter.length; i++) {
                 if (self.posesFilter[i].y < pos.y) {
                   message[0] = {message: '进', ifshow: true, notClick: false}
-                } else if (self.posesFilter[i].y = pos.y) {
+                } else if (self.posesFilter[i].y == pos.y) {
                   message[1] = {message: '平', ifshow: true, notClick: false}
                 } else {
                   message[2] = {message: '退', ifshow: true, notClick: false}
@@ -742,47 +742,54 @@
 
           } else if (chessMessage == '炮') {
             let poses = [];
+            console.log('炮',pos)
             for (let i = pos.x - 1; i >= 0; i--) {
               if (self.getChessItemAllColorByPos(i, pos.y) < 0) {
+                console.log(1,{x: i, y: pos.y})
                 poses.push({x: i, y: pos.y})
               } else {
                 break;
               }
             }
-            // console.log(poses)
+
             for (let i = pos.x + 1; i <= 8; i++) {
               if (self.getChessItemAllColorByPos(i, pos.y) < 0) {
+                console.log(2,{x: i, y: pos.y})
                 poses.push({x: i, y: pos.y});
               } else {
                 break;
               }
             }
-            // console.log(pos.y)
+
             for (let i = pos.y - 1; i >= 0; i--) {
               if (self.getChessItemAllColorByPos(pos.x, i) < 0) {
-                // console.log(pos.x, i, poses)
-                let xx = {x: pos.x, y: i}
-                poses.push(xx);
-                // console.log(pos.x, i, poses)
+                console.log(3,{x: pos.x, y: i})
+                poses.push({x: pos.x, y: i});
+
               } else {
                 break;
               }
             }
             for (let i = pos.y + 1; i <= 9; i++) {
               if (self.getChessItemAllColorByPos(pos.x, i) < 0) {
+                console.log(4,{x: pos.x, y: i})
                 poses.push({x: pos.x, y: i});
               } else {
                 break;
               }
             }
+
             let paoPoses = self.getPaoChiPos(color, pos.x, pos.y)
+            console.log('paoPoses',paoPoses)
             self.posesFilter = poses.concat(paoPoses);
-            // console.log(self.posesFilter)
+            console.log(self.posesFilter,pos.y)
             if (color == 'black') {
+
               for (let i = 0; i < self.posesFilter.length; i++) {
                 if (self.posesFilter[i].y > pos.y) {
                   message[0] = {message: '进', ifshow: true, notClick: false}
-                } else if (self.posesFilter[i].y = pos.y) {
+                } else if (self.posesFilter[i].y == pos.y) {
+
                   message[1] = {message: '平', ifshow: true, notClick: false}
                 } else {
                   message[2] = {message: '退', ifshow: true, notClick: false}
@@ -792,7 +799,7 @@
               for (let i = 0; i < self.posesFilter.length; i++) {
                 if (self.posesFilter[i].y < pos.y) {
                   message[0] = {message: '进', ifshow: true, notClick: false}
-                } else if (self.posesFilter[i].y = pos.y) {
+                } else if (self.posesFilter[i].y == pos.y) {
                   message[1] = {message: '平', ifshow: true, notClick: false}
                 } else {
                   message[2] = {message: '退', ifshow: true, notClick: false}
@@ -818,7 +825,7 @@
               //   console.log(self.posesFilter)
             } else {
               self.posesFilter = poses.filter(function (item) {
-                item.x >= 3 && item.x <= 5 && item.y >= 7 && item.y <= 9 && self.getChessItemByPos(color, item.x, item.y) < 0;
+                return item.x >= 3 && item.x <= 5 && item.y >= 7 && item.y <= 9 && self.getChessItemByPos(color, item.x, item.y) < 0;
               })
             }
             if (color == 'black') {
@@ -834,17 +841,19 @@
             } else {
               for (let i = 0; i < self.posesFilter.length; i++) {
                 if (self.posesFilter[i].y > pos.y) {
-                  message[2] = {message: '进', ifshow: true, notClick: false}
-                } else if (self.posesFilter[i].y = pos.y) {
+                  message[2] = {message: '退', ifshow: true, notClick: false}
+                } else if (self.posesFilter[i].y == pos.y) {
                   message[1] = {message: '平', ifshow: true, notClick: false}
                 } else if (self.posesFilter[i].y < pos.y) {
-                  message[0] = {message: '退', ifshow: true, notClick: false}
+                  message[0] = {message: '进', ifshow: true, notClick: false}
                 }
               }
             }
             this.selectItems = message;
           }
+
         }
+
       },
       step4: function (color, data) {
         let self = this;
@@ -917,10 +926,12 @@
             console.log('step4', blackStep)
           } else if (data == '平') {
             self.posesFilter.forEach(function (item) {
-              if (item.y = self.pos.y) {
+              console.log(item.y,self.pos.y)
+              if (item.y == self.pos.y) {
                 message.push(item.x)
               }
             })
+            console.log(message)
             this.selectItems = (color == 'black' ? blackStep : redStep1);
             this.selectItems.forEach(function (item) {
               item.notClick = !~message.indexOf(self.chaXunX[item.message])
@@ -933,7 +944,7 @@
                 }
               })
             } else {
-              self.posesFilter = forEach(function (item) {
+              self.posesFilter.forEach(function (item) {
                 if (item.y > self.pos.y) {
                   message.push(item.y - self.pos.y)
                 }
@@ -953,13 +964,16 @@
         let self = this;
         let chessMessage = this.chess[color + 'Item'][this.chessIndex].message;
         let pos = this.pos;
+        console.log(pos)
         let poses = [];
-        let chiIndex = self.getOtherSideChessItemByPos(color, pos.x, pos.y)
+        let chiIndex ;
+
         if (chessMessage == '象' || chessMessage == '相' || chessMessage == '士' || chessMessage == '仕' || chessMessage == '马' || chessMessage == '馬') {
           poses = self.posesFilter.filter(function (item) {
             // console.log(item.x == self.chaXunX[record[3]])
             return item.x == self.chaXunX[record[3]]
           })
+          chiIndex = self.getOtherSideChessItemByPos(color, poses[0].x, poses[0].y)
           if (chiIndex >= 0) {
             let chiColor = color == 'black' ? 'red' : 'black'
             let chiPos = self.chess[chiColor + 'Item'][chiIndex].pos
@@ -969,9 +983,12 @@
           this.chess[color + 'Item'][self.chessIndex].pos.push({x: poses[0].x, y: poses[0].y, active: true})
         } else {
           if (record[2] == '进' || record[2] == '退') {
-            let qh = this.chaXunX[record[2]];
+            let qh = this.chaXunY[record[2]];
+            console.log(qh)
             let change = color == 'black' ? 1 : -1;
             pos.y = pos.y + (!!qh ? -1 : 1) * this.chaXunY[record[3]] * change
+            console.log(pos.y)
+            chiIndex = self.getOtherSideChessItemByPos(color, pos.x, pos.y)
             if (chiIndex >= 0) {
               let chiColor = color == 'black' ? 'red' : 'black'
               let chiPos = self.chess[chiColor + 'Item'][chiIndex].pos
@@ -979,8 +996,8 @@
             }
             this.chess[color + 'Item'][self.chessIndex].pos.push(pos)
           } else {
-            console.log()
-            pos.x = this.chaXunX[message[3]];
+            pos.x = this.chaXunX[record[3]];
+            chiIndex = self.getOtherSideChessItemByPos(color, pos.x, pos.y)
             if (chiIndex >= 0) {
               let chiColor = color == 'black' ? 'red' : 'black'
               let chiPos = self.chess[chiColor + 'Item'][chiIndex].pos
@@ -1133,7 +1150,7 @@
             }
           }
         }
-        // console.log(poses)
+        console.log(poses)
         return poses;
       },
       getChessIndexByRecord: function (color, record) {  //根据数据记录 返回棋子的index
