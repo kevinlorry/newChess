@@ -1217,6 +1217,7 @@
     width: 582px;
     height: 700px;
     margin: 0 auto;
+    margin-left: 50px;
     position: relative;
     .top, .bottom {
       width: 100%;
